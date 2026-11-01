@@ -244,7 +244,11 @@ async def on_payment(message: types.Message):
 
 async def start_bot():
     await init_db()
-    # Принудительно удаляем вебхук, чтобы Telegram не блокировал запуск
-    await bot.delete_webhook(drop_pending_updates=True)
-    print("✅ Вебхук сброшен, начинаем Polling...")
+    try:
+        await bot.delete_webhook(drop_pending_updates=True)
+        print("✅ Вебхук успешно сброшен!")
+    except Exception as e:
+        print(f"❌ ОШИБКА ПРИ СБРОСЕ ВЕБХУКА: {e}")
+        
+    print("🔄 Запускаем Polling...")
     await dp.start_polling(bot)
