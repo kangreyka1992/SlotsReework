@@ -72,7 +72,6 @@ async def lifespan(app: FastAPI):
 
 app = FastAPI(lifespan=lifespan)
 
-
 # ═══════════ ПРОФИЛЬ ═══════════
 
 @app.post("/api/profile")
@@ -864,17 +863,14 @@ async def api_admin_broadcast(request: Request):
     return {"ok": True, "sent": sent, "failed": failed}
 
 
-# ⚠️ ВАЖНО: ЯВНЫЙ ПЕРЕХВАТ ЗАПРОСОВ НА ГЛАВНУЮ СТРАНИЦУ ⚠️
-# Это убивает 307 редирект на iOS и отдает index.html мгновенно (200 OK).
+# ⚠️ ЯВНАЯ ОТДАЧА HTML С ГЛАВНОЙ СТРАНИЦЫ ⚠️
 @app.get("/")
-@app.get("/webapp")
-@app.get("/webapp/")
-@app.get("/index.html")
 async def serve_index():
     return FileResponse("webapp/index.html")
 
-# Подключаем остальную статику (css, js, картинки) в самом конце
-app.mount("/webapp", StaticFiles(directory="webapp", html=True), name="webapp")
+# ⚠️ РАЗДАЧА ОСТАЛЬНОЙ СТАТИКИ (CSS, JS) ИЗ КОРНЯ ⚠️
+# Никаких префиксов /webapp больше нет, чтобы iOS не ломал редирект
+app.mount("/", StaticFiles(directory="webapp"), name="static")
 
 if __name__ == "__main__":
     uvicorn.run(app, host="0.0.0.0", port=8000)
