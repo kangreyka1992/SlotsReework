@@ -83,12 +83,12 @@ async def cmd_start(message: types.Message):
         left = 3 - days
         withdraw_status = f"🔒 Ещё {left} дн. (активность {days}/3)"
 
-    # Кнопка Mini App (ИЗМЕНЕНО НА index.html)
+    # Кнопка Mini App (ВЕДЕТ ПРЯМО НА КОРЕНЬ САЙТА)
     if WEBAPP_URL and WEBAPP_URL.startswith("http"):
         kb = InlineKeyboardMarkup(inline_keyboard=[
             [InlineKeyboardButton(
                 text="🎰 ОТКРЫТЬ КАЗИНО",
-                web_app=WebAppInfo(url=f"{WEBAPP_URL}/webapp/index.html"),
+                web_app=WebAppInfo(url=f"{WEBAPP_URL}/"),
             )],
         ])
     else:
@@ -158,11 +158,11 @@ async def cmd_webapp(message: types.Message):
         )
         return
 
-    # Кнопка Mini App (ИЗМЕНЕНО НА index.html)
+    # Кнопка Mini App (ВЕДЕТ ПРЯМО НА КОРЕНЬ САЙТА)
     kb = InlineKeyboardMarkup(inline_keyboard=[
         [InlineKeyboardButton(
             text="🎰 ОТКРЫТЬ КАЗИНО",
-            web_app=WebAppInfo(url=f"{WEBAPP_URL}/webapp/index.html"),
+            web_app=WebAppInfo(url=f"{WEBAPP_URL}/"),
         )],
     ])
     await message.answer(
