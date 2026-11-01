@@ -88,7 +88,7 @@ async def cmd_start(message: types.Message):
         kb = InlineKeyboardMarkup(inline_keyboard=[
             [InlineKeyboardButton(
                 text="🎰 ОТКРЫТЬ КАЗИНО",
-                web_app=WebAppInfo(url=f"{WEBAPP_URL}/webapp"),
+                web_app=WebAppInfo(url=f"{WEBAPP_URL}/webapp/"),
             )],
         ])
     else:
@@ -161,7 +161,7 @@ async def cmd_webapp(message: types.Message):
     kb = InlineKeyboardMarkup(inline_keyboard=[
         [InlineKeyboardButton(
             text="🎰 ОТКРЫТЬ КАЗИНО",
-            web_app=WebAppInfo(url=f"{WEBAPP_URL}/webapp"),
+            web_app=WebAppInfo(url=f"{WEBAPP_URL}/webapp/"),
         )],
     ])
     await message.answer(
