@@ -20,7 +20,7 @@ from database import (
 
 logging.basicConfig(level=logging.INFO)
 
-BOT_TOKEN = "8602932446:AAHbKHHJi93WEfjC_hvSJdcoBIwDKc2WRhY"
+BOT_TOKEN = os.getenv("BOT_TOKEN", "8602932446:AAHbKHHJi93WEfjC_hvSJdcoBIwDKc2WRhY")
 WEBAPP_URL = "https://bot-1789335277-8932-slotsbot.bothost.tech"
 
 RATE = 100
