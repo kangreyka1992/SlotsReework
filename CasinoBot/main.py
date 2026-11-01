@@ -64,7 +64,16 @@ def admin_only(init_data: str) -> dict:
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
-    task = asyncio.create_task(start_bot())
+    # Запускаем бота в фоне, но перехватываем ошибки, чтобы они были видны в логах!
+    async def run_bot():
+        try:
+            await start_bot()
+        except Exception as e:
+            import traceback
+            print(f"❌ БОТ УПАЛ С ОШИБКОЙ: {e}")
+            traceback.print_exc()
+
+    task = asyncio.create_task(run_bot())
     print("🚀 Бот и веб-сервер запущены")
     yield
     task.cancel()
