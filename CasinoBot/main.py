@@ -71,13 +71,6 @@ async def lifespan(app: FastAPI):
 
 
 app = FastAPI(lifespan=lifespan)
-app.mount("/", StaticFiles(directory="webapp", html=True), name="webapp")
-
-
-@app.get("/")
-async def root():
-    return FileResponse("webapp/index.html")
-
 
 # ═══════════ ПРОФИЛЬ ═══════════
 
@@ -869,6 +862,10 @@ async def api_admin_broadcast(request: Request):
     await log_admin_action(admin["id"], "broadcast", None, f"sent={sent} failed={failed}")
     return {"ok": True, "sent": sent, "failed": failed}
 
+
+# ⚠️ ВАЖНО: СТАТИКА ПОДКЛЮЧАЕТСЯ В САМОМ КОНЦЕ! ⚠️
+# Это нужно, чтобы запросы к /api/... работали, а не ломались об статику.
+app.mount("/", StaticFiles(directory="webapp", html=True), name="webapp")
 
 if __name__ == "__main__":
     uvicorn.run(app, host="0.0.0.0", port=8000)
