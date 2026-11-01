@@ -23,7 +23,7 @@ logging.basicConfig(level=logging.INFO)
 # Берем токен из переменных окружения Bothost, если нет - используем ваш
 BOT_TOKEN = os.getenv("BOT_TOKEN", "8602932446:AAEtYr2rsT8jFSVjYErG9Q84duJ3dVfSyCo")
 
-# ⚠️ ЗАМЕНЕНО НА ВАШ URL ОТ BOTHOST
+# ⚠️ ВАШ URL ОТ BOTHOST
 WEBAPP_URL = "https://bot-1789335277-8932-slotsbot.bothost.tech"
 
 RATE = 100
@@ -83,12 +83,12 @@ async def cmd_start(message: types.Message):
         left = 3 - days
         withdraw_status = f"🔒 Ещё {left} дн. (активность {days}/3)"
 
-    # Кнопка Mini App
+    # Кнопка Mini App (ИЗМЕНЕНО НА index.html)
     if WEBAPP_URL and WEBAPP_URL.startswith("http"):
         kb = InlineKeyboardMarkup(inline_keyboard=[
             [InlineKeyboardButton(
                 text="🎰 ОТКРЫТЬ КАЗИНО",
-                web_app=WebAppInfo(url=f"{WEBAPP_URL}/webapp/"),
+                web_app=WebAppInfo(url=f"{WEBAPP_URL}/webapp/index.html"),
             )],
         ])
     else:
@@ -158,10 +158,11 @@ async def cmd_webapp(message: types.Message):
         )
         return
 
+    # Кнопка Mini App (ИЗМЕНЕНО НА index.html)
     kb = InlineKeyboardMarkup(inline_keyboard=[
         [InlineKeyboardButton(
             text="🎰 ОТКРЫТЬ КАЗИНО",
-            web_app=WebAppInfo(url=f"{WEBAPP_URL}/webapp/"),
+            web_app=WebAppInfo(url=f"{WEBAPP_URL}/webapp/index.html"),
         )],
     ])
     await message.answer(
