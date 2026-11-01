@@ -20,10 +20,11 @@ from database import (
 
 logging.basicConfig(level=logging.INFO)
 
-BOT_TOKEN = "8602932446:AAEtYr2rsT8jFSVjYErG9Q84duJ3dVfSyCo"
+# Берем токен из переменных окружения Bothost, если нет - используем ваш
+BOT_TOKEN = os.getenv("BOT_TOKEN", "8602932446:AAEtYr2rsT8jFSVjYErG9Q84duJ3dVfSyCo")
 
-# ⚠️ ЗАМЕНИ НА СВОЙ URL от cloudflared/ngrok
-WEBAPP_URL = "https://immunity-overcrowd-props.ngrok-free.dev"
+# ⚠️ ЗАМЕНЕНО НА ВАШ URL ОТ BOTHOST
+WEBAPP_URL = "https://bot-1789335277-8932-slotsbot.bothost.tech"
 
 RATE = 100
 STAR_PACKS = {s: s * RATE for s in [10, 30, 50, 100, 250, 500]}
