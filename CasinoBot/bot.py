@@ -245,4 +245,6 @@ async def on_payment(message: types.Message):
 
 async def start_bot():
     await init_db()
+    # Принудительно удаляем вебхук и сбрасываем старые зависшие подключения
+    await bot.delete_webhook(drop_pending_updates=True)
     await dp.start_polling(bot)
