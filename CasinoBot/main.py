@@ -64,18 +64,20 @@ def admin_only(init_data: str) -> dict:
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
-    # Запускаем бота в фоне, но перехватываем ошибки, чтобы они были видны в логах!
+    print("🔥 MAIN.PY: LIFESPAN СТАРТ", flush=True)
+    
     async def run_bot():
         try:
             await start_bot()
         except Exception as e:
+            print(f"❌ MAIN.PY: БОТ УПАЛ: {e}", flush=True)
             import traceback
-            print(f"❌ БОТ УПАЛ С ОШИБКОЙ: {e}")
             traceback.print_exc()
 
     task = asyncio.create_task(run_bot())
-    print("🚀 Бот и веб-сервер запущены")
+    print("🚀 MAIN.PY: Бот и веб-сервер запущены", flush=True)
     yield
+    print("🛑 MAIN.PY: LIFESPAN ЗАВЕРШЕНИЕ", flush=True)
     task.cancel()
 
 
@@ -875,6 +877,7 @@ async def api_admin_broadcast(request: Request):
 # ⚠️ НОВЫЙ МАРШРУТ ДЛЯ ИГРЫ (ВМЕСТО /webapp) ⚠️
 @app.get("/play")
 async def serve_play():
+    print("🔥 MAIN.PY: ЗАПРОС НА /play", flush=True)
     return FileResponse("webapp/index.html")
 
 # ⚠️ РАЗДАЧА CSS/JS ИЗ КОРНЯ ⚠️
