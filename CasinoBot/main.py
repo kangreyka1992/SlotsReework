@@ -71,7 +71,7 @@ async def lifespan(app: FastAPI):
 
 
 app = FastAPI(lifespan=lifespan)
-app.mount("/webapp", StaticFiles(directory="webapp", html=True), name="webapp")
+app.mount("/", StaticFiles(directory="webapp", html=True), name="webapp")
 
 
 @app.get("/")
