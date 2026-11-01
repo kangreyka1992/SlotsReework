@@ -20,6 +20,7 @@ from database import (
 
 logging.basicConfig(level=logging.INFO)
 
+# ЖЕСТКО ПРОПИСАННЫЙ ТОКЕН (убедись, что он совпадает с BotFather)
 BOT_TOKEN = "8602932446:AAHbKHHJi93WEfjC_hvSJdcoBIwDKc2WRhY"
 WEBAPP_URL = "https://bot-1789335277-8932-slotsbot.bothost.tech"
 
@@ -136,13 +137,8 @@ async def cb_noop(callback: types.CallbackQuery):
 @router.message(Command("webapp"))
 async def cmd_webapp(message: types.Message):
     await log_visit(message.from_user.id)
-
     if not WEBAPP_URL or not WEBAPP_URL.startswith("http"):
-        await message.answer(
-            "❌ <b>Mini App не настроен</b>\n\n"
-            "<i>Администратор должен указать WEBAPP_URL в настройках бота.</i>",
-            parse_mode="HTML",
-        )
+        await message.answer("❌ <b>Mini App не настроен</b>", parse_mode="HTML")
         return
 
     kb = InlineKeyboardMarkup(inline_keyboard=[
@@ -152,8 +148,7 @@ async def cmd_webapp(message: types.Message):
         )],
     ])
     await message.answer(
-        "🎰 <b>Казино ждёт тебя!</b>\n\n"
-        "Нажми кнопку ниже 👇",
+        "🎰 <b>Казино ждёт тебя!</b>\n\nНажми кнопку ниже 👇",
         parse_mode="HTML",
         reply_markup=kb,
     )
@@ -161,40 +156,7 @@ async def cmd_webapp(message: types.Message):
 
 @router.message(Command("help"))
 async def cmd_help(message: types.Message):
-    text = (
-        "📖 <b>ИНСТРУКЦИЯ</b>\n\n"
-        "━━━━━━━━━━━━━━━━━━━━━━━━━━\n"
-        "🎮 <b>ИГРЫ</b>\n"
-        "━━━━━━━━━━━━━━━━━━━━━━━━━━\n\n"
-        "🎰 <b>Слоты</b>\n"
-        "Крути 3 барабана. 2 совпадения → ×2, "
-        "3 одинаковых → ×3–×10. 🤑 джекпот — ×10.\n\n"
-        "💣 <b>Сапёр</b>\n"
-        "Поле 5×5, 5 мин. Все безопасные клетки → ×2.5.\n"
-        "Можно забрать выигрыш досрочно.\n\n"
-        "🚀 <b>Ракетка</b>\n"
-        "Множитель растёт каждую секунду. "
-        "Успей забрать до взрыва.\n\n"
-        "🎲 <b>Кости</b>\n"
-        "1-3 или 4-6 → ×2. Точное число → ×5.\n\n"
-        "🔫 <b>Русская рулетка</b>\n"
-        "7 патронов, каждый шаг +1. Максимум ×7.\n\n"
-        "━━━━━━━━━━━━━━━━━━━━━━━━━━\n"
-        "💱 <b>ФИНАНСЫ</b>\n"
-        "━━━━━━━━━━━━━━━━━━━━━━━━━━\n\n"
-        f"⭐ <b>Пополнение</b> — 1 ⭐ = {RATE} 🪙\n"
-        f"💸 <b>Вывод</b> — 1 ⭐ = {RATE} 🪙, минимум 15 ⭐\n"
-        "🔒 <b>Условие вывода</b> — заходить 3 дня из последних 7\n\n"
-        "━━━━━━━━━━━━━━━━━━━━━━━━━━\n"
-        "🎁 <b>БОНУСЫ</b>\n"
-        "━━━━━━━━━━━━━━━━━━━━━━━━━━\n\n"
-        "🎁 <b>Ежедневный бонус</b> — 500 🪙 + 100 🪙 за каждый день серии\n\n"
-        "🎟 <b>Промокоды</b> — дают монеты или скидку\n\n"
-        "👥 <b>Рефералы</b> — пригласи друга, "
-        "получи скидку 10% когда он пополнит на 100+ ⭐\n\n"
-        "🏅 <b>Достижения</b> — за активность и рекорды"
-    )
-    await message.answer(text, parse_mode="HTML")
+    await message.answer("📖 Инструкция в разработке", parse_mode="HTML")
 
 
 @router.pre_checkout_query()
@@ -242,13 +204,21 @@ async def on_payment(message: types.Message):
         parse_mode="HTML",
     )
 
+
 async def start_bot():
+    print("🔥🔥🔥 BOT.PY: НАЧАЛО ЗАПУСКА БОТА 🔥🔥🔥", flush=True)
     await init_db()
+    print("✅ BOT.PY: БАЗА ДАННЫХ ГОТОВА", flush=True)
+    
     try:
         await bot.delete_webhook(drop_pending_updates=True)
-        print("✅ Вебхук успешно сброшен!")
+        print("✅ BOT.PY: ВЕБХУК УДАЛЕН", flush=True)
     except Exception as e:
-        print(f"❌ ОШИБКА ПРИ СБРОСЕ ВЕБХУКА: {e}")
-        
-    print("🔄 Запускаем Polling...")
-    await dp.start_polling(bot)
+        print(f"❌ ОШИБКА ПРИ УДАЛЕНИИ ВЕБХУКА: {e}", flush=True)
+
+    print("🔄 BOT.PY: ЗАПУСКАЕМ POLLING...", flush=True)
+    try:
+        await dp.start_polling(bot)
+        print("❌ BOT.PY: POLLING ЗАВЕРШИЛСЯ (ПОЧЕМУ-ТО)", flush=True)
+    except Exception as e:
+        print(f"❌ BOT.PY: ОШИБКА В ПОЛЛИНГЕ: {e}", flush=True)
