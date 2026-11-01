@@ -20,10 +20,7 @@ from database import (
 
 logging.basicConfig(level=logging.INFO)
 
-# Берем токен из переменных окружения Bothost, если нет - используем ваш
 BOT_TOKEN = os.getenv("BOT_TOKEN", "8602932446:AAEtYr2rsT8jFSVjYErG9Q84duJ3dVfSyCo")
-
-# ⚠️ ВАШ URL ОТ BOTHOST
 WEBAPP_URL = "https://bot-1789335277-8932-slotsbot.bothost.tech"
 
 RATE = 100
@@ -44,7 +41,6 @@ async def cmd_start(message: types.Message):
     await ensure_user(message.from_user.id, message.from_user.username)
     await log_visit(message.from_user.id)
 
-    # Реферальная ссылка
     args = message.text.split()
     if len(args) > 1 and args[1].startswith("ref_"):
         try:
@@ -66,7 +62,6 @@ async def cmd_start(message: types.Message):
         except (ValueError, IndexError):
             pass
 
-    # Данные для меню
     uid = message.from_user.id
     balance = await get_balance(uid)
     stats = await get_user_full_stats(uid)
@@ -75,7 +70,6 @@ async def cmd_start(message: types.Message):
     wagered = stats[1] if stats else 0
     won = stats[2] if stats else 0
 
-    # Проверка на вывод
     allowed, days = await can_withdraw(uid)
     if allowed:
         withdraw_status = "✅ Доступен"
@@ -83,7 +77,6 @@ async def cmd_start(message: types.Message):
         left = 3 - days
         withdraw_status = f"🔒 Ещё {left} дн. (активность {days}/3)"
 
-    # Кнопка Mini App (ВЕДЕТ ПРЯМО НА КОРЕНЬ САЙТА)
     if WEBAPP_URL and WEBAPP_URL.startswith("http"):
         kb = InlineKeyboardMarkup(inline_keyboard=[
             [InlineKeyboardButton(
@@ -100,9 +93,7 @@ async def cmd_start(message: types.Message):
         "╔══════════════════════════╗\n"
         "      🎰 <b>CASINO</b> 🎰\n"
         "╚══════════════════════════╝\n\n"
-
         f"👤 <b>{message.from_user.first_name or 'Игрок'}</b>, добро пожаловать!\n\n"
-
         "━━━━━━━━━━━━━━━━━━━━━━━━━━\n"
         "💼 <b>ВАШ ПРОФИЛЬ</b>\n"
         "━━━━━━━━━━━━━━━━━━━━━━━━━━\n"
@@ -111,7 +102,6 @@ async def cmd_start(message: types.Message):
         f"💸 Поставлено: <b>{fmt(wagered)}</b>\n"
         f"🏆 Выиграно: <b>{fmt(won)}</b>\n"
         f"💳 Вывод: <b>{withdraw_status}</b>\n\n"
-
         "━━━━━━━━━━━━━━━━━━━━━━━━━━\n"
         "🎮 <b>ДОСТУПНЫЕ ИГРЫ</b>\n"
         "━━━━━━━━━━━━━━━━━━━━━━━━━━\n"
@@ -120,7 +110,6 @@ async def cmd_start(message: types.Message):
         "🚀 Ракетка — растущий множитель\n"
         "🎲 Кости — ×5 на точное число\n"
         "🔫 Русская рулетка — до ×7\n\n"
-
         "━━━━━━━━━━━━━━━━━━━━━━━━━━\n"
         "💎 <b>ВОЗМОЖНОСТИ</b>\n"
         "━━━━━━━━━━━━━━━━━━━━━━━━━━\n"
@@ -130,11 +119,9 @@ async def cmd_start(message: types.Message):
         "🎟 Промокоды\n"
         "👥 Реферальная программа −10%\n"
         "🏅 Достижения и награды\n\n"
-
         "━━━━━━━━━━━━━━━━━━━━━━━━━━\n"
         f"💱 Курс: <b>1 ⭐ = {RATE} 🪙</b>\n"
         "━━━━━━━━━━━━━━━━━━━━━━━━━━\n\n"
-
         "👇 <b>Нажми кнопку ниже, чтобы играть</b>"
     )
 
@@ -158,7 +145,6 @@ async def cmd_webapp(message: types.Message):
         )
         return
 
-    # Кнопка Mini App (ВЕДЕТ ПРЯМО НА КОРЕНЬ САЙТА)
     kb = InlineKeyboardMarkup(inline_keyboard=[
         [InlineKeyboardButton(
             text="🎰 ОТКРЫТЬ КАЗИНО",
@@ -177,48 +163,35 @@ async def cmd_webapp(message: types.Message):
 async def cmd_help(message: types.Message):
     text = (
         "📖 <b>ИНСТРУКЦИЯ</b>\n\n"
-
         "━━━━━━━━━━━━━━━━━━━━━━━━━━\n"
         "🎮 <b>ИГРЫ</b>\n"
         "━━━━━━━━━━━━━━━━━━━━━━━━━━\n\n"
-
         "🎰 <b>Слоты</b>\n"
         "Крути 3 барабана. 2 совпадения → ×2, "
         "3 одинаковых → ×3–×10. 🤑 джекпот — ×10.\n\n"
-
         "💣 <b>Сапёр</b>\n"
         "Поле 5×5, 5 мин. Все безопасные клетки → ×2.5.\n"
         "Можно забрать выигрыш досрочно.\n\n"
-
         "🚀 <b>Ракетка</b>\n"
         "Множитель растёт каждую секунду. "
         "Успей забрать до взрыва.\n\n"
-
         "🎲 <b>Кости</b>\n"
         "1-3 или 4-6 → ×2. Точное число → ×5.\n\n"
-
         "🔫 <b>Русская рулетка</b>\n"
         "7 патронов, каждый шаг +1. Максимум ×7.\n\n"
-
         "━━━━━━━━━━━━━━━━━━━━━━━━━━\n"
         "💱 <b>ФИНАНСЫ</b>\n"
         "━━━━━━━━━━━━━━━━━━━━━━━━━━\n\n"
-
         f"⭐ <b>Пополнение</b> — 1 ⭐ = {RATE} 🪙\n"
         f"💸 <b>Вывод</b> — 1 ⭐ = {RATE} 🪙, минимум 15 ⭐\n"
         "🔒 <b>Условие вывода</b> — заходить 3 дня из последних 7\n\n"
-
         "━━━━━━━━━━━━━━━━━━━━━━━━━━\n"
         "🎁 <b>БОНУСЫ</b>\n"
         "━━━━━━━━━━━━━━━━━━━━━━━━━━\n\n"
-
         "🎁 <b>Ежедневный бонус</b> — 500 🪙 + 100 🪙 за каждый день серии\n\n"
-
         "🎟 <b>Промокоды</b> — дают монеты или скидку\n\n"
-
         "👥 <b>Рефералы</b> — пригласи друга, "
         "получи скидку 10% когда он пополнит на 100+ ⭐\n\n"
-
         "🏅 <b>Достижения</b> — за активность и рекорды"
     )
     await message.answer(text, parse_mode="HTML")
